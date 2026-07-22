@@ -1,3 +1,3 @@
 # Crisp
 
-Waffle's fork of Paper
+A Paper fork for customization.
