@@ -8,9 +8,6 @@ on:
 permissions:
   contents: write
 
-env:
-  PAPER_BRANCH: dev/26.2
-
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -28,10 +25,24 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-      - name: Resolve latest Paper commit
+      - name: Resolve latest published Paper build commit
         id: paper
         run: |
-          latest="$(git ls-remote https://github.com/PaperMC/Paper.git "refs/heads/$PAPER_BRANCH" | cut -f1)"
+          mc_version="$(grep '^mcVersion=' gradle.properties | cut -d= -f2)"
+          # Prefer STABLE builds; fall back to BETA until a stable build exists for this version.
+          latest=""
+          for channel in STABLE BETA; do
+            latest="$(curl -sf "https://fill.papermc.io/v3/projects/paper/versions/${mc_version}/builds?channel=${channel}" \
+              | jq -r 'map(select(.commits | length > 0)) | first | .commits[0].sha // empty')"
+            if [ -n "$latest" ]; then
+              echo "Tracking latest ${channel} build commit for ${mc_version}: ${latest}"
+              break
+            fi
+          done
+          if [ -z "$latest" ]; then
+            echo "No published builds found for ${mc_version}" >&2
+            exit 1
+          fi
           current="$(grep '^paperRef=' gradle.properties | cut -d= -f2)"
           echo "latest=$latest" >> "$GITHUB_OUTPUT"
           echo "current=$current" >> "$GITHUB_OUTPUT"
