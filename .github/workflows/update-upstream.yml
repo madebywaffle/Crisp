@@ -1,0 +1,49 @@
+name: Update upstream
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  PAPER_BRANCH: dev/26.2
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Configure Git
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+      - name: Resolve latest Paper commit
+        id: paper
+        run: |
+          latest="$(git ls-remote https://github.com/PaperMC/Paper.git "refs/heads/$PAPER_BRANCH" | cut -f1)"
+          current="$(grep '^paperRef=' gradle.properties | cut -d= -f2)"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+      - name: Bump and rebuild patches
+        if: steps.paper.outputs.latest != steps.paper.outputs.current
+        run: |
+          sed -i "s/^paperRef=.*/paperRef=${{ steps.paper.outputs.latest }}/" gradle.properties
+          ./gradlew applyAllPatches --stacktrace
+          ./gradlew rebuildPaperPatches crisp-server:rebuildAllServerPatches --stacktrace
+      - name: Commit upstream bump to main
+        if: steps.paper.outputs.latest != steps.paper.outputs.current
+        run: |
+          git add -A
+          git commit -m "Update upstream Paper to ${{ steps.paper.outputs.latest }}"
+          git push origin HEAD:main
