@@ -3,11 +3,18 @@ name: Release
 on:
   push:
     tags: ["*"]
+    branches: [main]
+    paths:
+      - gradle.properties
+      - build.gradle.kts
+      - settings.gradle.kts
+      - crisp-api/**
+      - crisp-server/**
   workflow_dispatch:
     inputs:
       tag:
-        description: "Release tag to build and publish"
-        required: true
+        description: "Release tag to build and publish (omit to auto-number)"
+        required: false
 
 permissions:
   contents: write
@@ -34,7 +41,15 @@ jobs:
       - name: Resolve build metadata
         id: meta
         run: |
-          echo "tag=${{ github.event.inputs.tag || github.ref_name }}" >> "$GITHUB_OUTPUT"
+          tag="${{ github.event.inputs.tag }}"
+          if [ -z "$tag" ] && [ "${{ github.ref_type }}" = "tag" ]; then
+            tag="${{ github.ref_name }}"
+          fi
+          if [ -z "$tag" ]; then
+            mc_version="$(grep '^mcVersion=' gradle.properties | cut -d= -f2)"
+            tag="${mc_version}-${{ github.run_number }}"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "BUILD_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - name: Apply patches
         run: ./gradlew applyAllPatches --stacktrace

@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   update:
@@ -58,3 +59,9 @@ jobs:
           git add -A
           git commit -m "Update upstream Paper to ${{ steps.paper.outputs.latest }}"
           git push origin HEAD:main
+      # Pushes made with GITHUB_TOKEN do not trigger other workflows, so dispatch the release explicitly.
+      - name: Trigger release
+        if: steps.paper.outputs.latest != steps.paper.outputs.current
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run release.yml --ref main
