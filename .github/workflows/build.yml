@@ -25,5 +25,25 @@ jobs:
           git config --global user.name "GitHub Actions"
       - name: Apply patches
         run: ./gradlew applyAllPatches --stacktrace
+      # Fails when upstream adds a brain mob that DAB does not gate yet,
+      # so coverage gaps surface on the daily upstream bump instead of silently shipping.
+      - name: Check DAB brain coverage
+        run: |
+          ungated=0
+          while IFS= read -r match; do
+            file="${match%%:*}"
+            line="${match#*:}"; line="${line%%:*}"
+            prev="$(sed -n "$((line - 1))p" "$file")"
+            if [[ "$prev" != *"behaviorTick"* ]]; then
+              echo "::error file=$file,line=$line::brain tick without DAB gate"
+              ungated=$((ungated + 1))
+            fi
+          done < <(grep -rn "getBrain().tick(level, this);\|brain.tick(level, this);" \
+            crisp-server/src/minecraft/java/net/minecraft/world/entity --include="*.java")
+          if [ "$ungated" -gt 0 ]; then
+            echo "$ungated ungated brain tick site(s) found - extend the DAB patches"
+            exit 1
+          fi
+          echo "all brain tick sites gated"
       - name: Build
         run: ./gradlew build --stacktrace

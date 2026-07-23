@@ -1,0 +1,11 @@
+Some of Crisp's patches are based on, or ported from, other GPL-3.0
+licensed Paper forks. Original copyright remains with their authors.
+
+Dynamic Activation of Brain (crisp-server/minecraft-patches/sources/*):
+  Originally Airplane, Copyright (C) 2020 Technove LLC (Paul Sauve),
+  later maintained by Pufferfish (https://github.com/pufferfish-gg/Pufferfish).
+  Crisp extends it with full 26.2 brain-mob coverage, an in-water guard,
+  and full-rate exemptions for fighting, hurt, and breeding entities.
+
+All patches are distributed under the GNU General Public License v3.0,
+the same license as this project (see LICENSE).
