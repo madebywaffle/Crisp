@@ -2,9 +2,10 @@ package me.dongmyeng.crisp;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntityType;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,7 +15,7 @@ public final class CrispConfig {
     private static final File CONFIG_FILE = new File("crisp.yml");
 
     // Dynamic Activation of Brain (attribution: see PATCH-LICENSE)
-    public static boolean dearEnabled;
+    public static boolean dabEnabled;
     public static int startDistance;
     public static int startDistanceSquared;
     public static int maximumActivationPrio;
@@ -37,7 +38,7 @@ public final class CrispConfig {
         config.addDefault("dab.max-tick-freq", 20);
         config.addDefault("dab.activation-dist-mod", 8);
         config.addDefault("dab.dont-enable-if-in-water", true);
-        config.addDefault("dab.blacklisted-entities", Collections.emptyList());
+        config.addDefault("dab.blacklisted-entities", List.of());
         config.setComments("dab", List.of(
             "Dynamic Activation of Brain: entities far away from players",
             "tick their AI goals and behaviors less frequently.",
@@ -50,7 +51,7 @@ public final class CrispConfig {
             "blacklisted-entities: entity ids excluded from DAB, e.g. [villager, zombie]"
         ));
 
-        dearEnabled = config.getBoolean("dab.enabled");
+        dabEnabled = config.getBoolean("dab.enabled");
         startDistance = config.getInt("dab.start-distance");
         startDistanceSquared = startDistance * startDistance;
         maximumActivationPrio = config.getInt("dab.max-tick-freq");
@@ -61,8 +62,8 @@ public final class CrispConfig {
             entityType.dabEnabled = true; // reset all, before disabling the blacklisted ones
         }
         for (String name : config.getStringList("dab.blacklisted-entities")) {
-            net.minecraft.resources.Identifier key = net.minecraft.resources.Identifier.tryParse(name);
-            java.util.Optional<EntityType<?>> entityType = key == null ? java.util.Optional.empty() : BuiltInRegistries.ENTITY_TYPE.getOptional(key);
+            Identifier key = Identifier.tryParse(name);
+            Optional<EntityType<?>> entityType = key == null ? Optional.empty() : BuiltInRegistries.ENTITY_TYPE.getOptional(key);
             entityType.ifPresentOrElse(
                 type -> type.dabEnabled = false,
                 () -> MinecraftServer.LOGGER.warn("crisp.yml: unknown entity \"{}\" in dab.blacklisted-entities", name)
