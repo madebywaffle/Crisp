@@ -1,0 +1,15 @@
+--- a/net/minecraft/world/entity/animal/golem/CopperGolem.java
++++ b/net/minecraft/world/entity/animal/golem/CopperGolem.java
+@@ -179,10 +_,12 @@
+         this.setWeatherState(input.read("weather_state", WeatheringCopper.WeatherState.CODEC).orElse(WeatheringCopper.WeatherState.UNAFFECTED));
+     }
+ 
++    private int behaviorTick = 0; // Crisp - DAB
+     @Override
+     protected void customServerAiStep(final ServerLevel level) {
+         ProfilerFiller profiler = Profiler.get();
+         profiler.push("copperGolemBrain");
++        if (this.behaviorTick++ % this.activatedPriority == 0) // Crisp - DAB
+         this.getBrain().tick(level, this);
+         profiler.pop();
+         profiler.push("copperGolemActivityUpdate");

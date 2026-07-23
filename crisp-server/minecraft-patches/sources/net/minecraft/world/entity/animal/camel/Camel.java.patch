@@ -1,0 +1,16 @@
+--- a/net/minecraft/world/entity/animal/camel/Camel.java
++++ b/net/minecraft/world/entity/animal/camel/Camel.java
+@@ -168,11 +_,13 @@
+             : (this.isBaby() ? BABY_STANDING_DIMENSIONS : super.getDefaultDimensions(pose));
+     }
+ 
++    private int behaviorTick = 0; // Crisp - DAB
+     @Override
+     protected void customServerAiStep(final ServerLevel level) {
+         ProfilerFiller profiler = Profiler.get();
+         profiler.push("camelBrain");
+         Brain<Camel> brain = this.getBrain();
++        if (this.behaviorTick++ % this.activatedPriority == 0) // Crisp - DAB
+         brain.tick(level, this);
+         profiler.pop();
+         profiler.push("camelActivityUpdate");

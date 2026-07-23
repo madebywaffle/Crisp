@@ -1,0 +1,15 @@
+--- a/net/minecraft/world/entity/animal/nautilus/Nautilus.java
++++ b/net/minecraft/world/entity/animal/nautilus/Nautilus.java
+@@ -63,10 +_,12 @@
+         return this.isBaby() ? BABY_DIMENSIONS : super.getDefaultDimensions(pose);
+     }
+ 
++    private int behaviorTick = 0; // Crisp - DAB
+     @Override
+     protected void customServerAiStep(final ServerLevel level) {
+         ProfilerFiller profiler = Profiler.get();
+         profiler.push("nautilusBrain");
++        if (this.behaviorTick++ % this.activatedPriority == 0) // Crisp - DAB
+         this.getBrain().tick(level, this);
+         profiler.pop();
+         profiler.push("nautilusActivityUpdate");

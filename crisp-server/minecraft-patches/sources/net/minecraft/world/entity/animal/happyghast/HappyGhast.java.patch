@@ -1,0 +1,16 @@
+--- a/net/minecraft/world/entity/animal/happyghast/HappyGhast.java
++++ b/net/minecraft/world/entity/animal/happyghast/HappyGhast.java
+@@ -401,11 +_,13 @@
+         return (Brain<HappyGhast>)super.getBrain();
+     }
+ 
++    private int behaviorTick = 0; // Crisp - DAB
+     @Override
+     protected void customServerAiStep(final ServerLevel level) {
+         if (this.isBaby()) {
+             ProfilerFiller profiler = Profiler.get();
+             profiler.push("happyGhastBrain");
++            if (this.behaviorTick++ % this.activatedPriority == 0) // Crisp - DAB
+             this.getBrain().tick(level, this);
+             profiler.pop();
+             profiler.push("happyGhastActivityUpdate");

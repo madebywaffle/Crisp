@@ -1,0 +1,15 @@
+--- a/net/minecraft/world/entity/animal/armadillo/Armadillo.java
++++ b/net/minecraft/world/entity/animal/armadillo/Armadillo.java
+@@ -138,10 +_,12 @@
+         return (Brain<Armadillo>)super.getBrain();
+     }
+ 
++    private int behaviorTick = 0; // Crisp - DAB
+     @Override
+     protected void customServerAiStep(final ServerLevel level) {
+         ProfilerFiller profiler = Profiler.get();
+         profiler.push("armadilloBrain");
++        if (this.behaviorTick++ % this.activatedPriority == 0) // Crisp - DAB
+         this.getBrain().tick(level, this);
+         profiler.pop();
+         profiler.push("armadilloActivityUpdate");

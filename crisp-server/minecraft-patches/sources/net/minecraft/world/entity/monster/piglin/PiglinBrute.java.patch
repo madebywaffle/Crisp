@@ -1,0 +1,15 @@
+--- a/net/minecraft/world/entity/monster/piglin/PiglinBrute.java
++++ b/net/minecraft/world/entity/monster/piglin/PiglinBrute.java
+@@ -92,10 +_,12 @@
+         return itemStack.is(Items.GOLDEN_AXE) && super.wantsToPickUp(level, itemStack);
+     }
+ 
++    private int behaviorTick = 0; // Crisp - DAB
+     @Override
+     protected void customServerAiStep(final ServerLevel level) {
+         ProfilerFiller profiler = Profiler.get();
+         profiler.push("piglinBruteBrain");
++        if (this.behaviorTick++ % this.activatedPriority == 0) // Crisp - DAB
+         this.getBrain().tick(level, this);
+         profiler.pop();
+         PiglinBruteAi.updateActivity(this);
