@@ -5,7 +5,7 @@
      @Override
      public VersionFetcher getVersionFetcher() {
 -        return new PaperVersionFetcher();
-+        return new me.dongmyeng.crisp.CrispVersionFetcher();
++        return new io.github.madebywaffle.crisp.CrispVersionFetcher();
      }
  
      @Override

@@ -5,7 +5,7 @@
      public boolean fixedPose = false; // Paper - Expand Pose API
      private final int despawnTime; // Paper - entity despawn time limit
 +    public boolean activatedPriorityReset = false; // Crisp - DAB
-+    public int activatedPriority = me.dongmyeng.crisp.CrispConfig.maximumActivationPrio; // Crisp - DAB (golf score)
++    public int activatedPriority = io.github.madebywaffle.crisp.CrispConfig.maximumActivationPrio; // Crisp - DAB (golf score)
      public int totalEntityAge; // Paper - age-like counter for all entities
      public final io.papermc.paper.entity.activation.ActivationType activationType = io.papermc.paper.entity.activation.ActivationType.activationTypeFor(this); // Paper - EAR 2/tracking ranges
      // Paper start - EAR 2

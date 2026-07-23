@@ -6,21 +6,21 @@
                  ActivationRange.activateEntity(entity);
 +
 +                // Crisp start - DAB
-+                if (me.dongmyeng.crisp.CrispConfig.dabEnabled && entity.getType().dabEnabled
-+                        && (!me.dongmyeng.crisp.CrispConfig.dabDontEnableIfInWater
++                if (io.github.madebywaffle.crisp.CrispConfig.dabEnabled && entity.getType().dabEnabled
++                        && (!io.github.madebywaffle.crisp.CrispConfig.dabDontEnableIfInWater
 +                            || !entity.isInWater()
 +                            || entity.is(net.minecraft.tags.EntityTypeTags.CAN_BREATHE_UNDER_WATER))
 +                        && !isThrottleExempt(entity)) {
 +                    if (!entity.activatedPriorityReset) {
 +                        entity.activatedPriorityReset = true;
-+                        entity.activatedPriority = me.dongmyeng.crisp.CrispConfig.maximumActivationPrio;
++                        entity.activatedPriority = io.github.madebywaffle.crisp.CrispConfig.maximumActivationPrio;
 +                    }
 +                    net.minecraft.world.phys.Vec3 playerVec = player.position();
 +                    net.minecraft.world.phys.Vec3 entityVec = entity.position();
 +                    double diffX = playerVec.x - entityVec.x, diffY = playerVec.y - entityVec.y, diffZ = playerVec.z - entityVec.z;
 +                    int squaredDistance = (int) (diffX * diffX + diffY * diffY + diffZ * diffZ);
-+                    entity.activatedPriority = squaredDistance > me.dongmyeng.crisp.CrispConfig.startDistanceSquared ?
-+                            Math.max(1, Math.min(squaredDistance >> me.dongmyeng.crisp.CrispConfig.activationDistanceMod, entity.activatedPriority)) :
++                    entity.activatedPriority = squaredDistance > io.github.madebywaffle.crisp.CrispConfig.startDistanceSquared ?
++                            Math.max(1, Math.min(squaredDistance >> io.github.madebywaffle.crisp.CrispConfig.activationDistanceMod, entity.activatedPriority)) :
 +                            1;
 +                } else {
 +                    entity.activatedPriority = 1;

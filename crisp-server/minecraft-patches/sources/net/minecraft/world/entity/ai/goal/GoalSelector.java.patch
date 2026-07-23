@@ -6,7 +6,7 @@
      // Paper start - EAR 2
 -    public boolean inactiveTick() {
 +    public boolean inactiveTick(int tickRate, boolean inactive) { // Crisp start - DAB
-+        if (inactive && !me.dongmyeng.crisp.CrispConfig.dabEnabled) tickRate = 4; // reset to Paper's
++        if (inactive && !io.github.madebywaffle.crisp.CrispConfig.dabEnabled) tickRate = 4; // reset to Paper's
 +        tickRate = Math.min(tickRate, 3);
          this.curRate++;
 -        return this.curRate % 3 == 0; // TODO newGoalRate was already unused in 1.20.4, check if this is correct

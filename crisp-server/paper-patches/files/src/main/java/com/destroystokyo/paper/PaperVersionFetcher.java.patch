@@ -44,7 +44,7 @@
 -                }
 -            }
 -        }
-+        me.dongmyeng.crisp.CrispVersionFetcher.getUpdateStatusStartupMessage();
++        io.github.madebywaffle.crisp.CrispVersionFetcher.getUpdateStatusStartupMessage();
      }
  
      private static Component getUpdateStatusMessage() {

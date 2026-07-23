@@ -64,7 +64,7 @@
 -            "Brand-Id" to "papermc:paper",
 -            "Brand-Name" to "Paper",
 +            "Specification-Vendor" to "Crisp",
-+            "Brand-Id" to "dongmyeng:crisp",
++            "Brand-Id" to "madebywaffle:crisp",
 +            "Brand-Name" to "Crisp",
              "Build-Number" to (build ?: ""),
              "Build-Time" to buildTime.toString(),

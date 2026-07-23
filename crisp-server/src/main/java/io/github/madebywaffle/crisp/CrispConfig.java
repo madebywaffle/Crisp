@@ -1,4 +1,4 @@
-package me.dongmyeng.crisp;
+package io.github.madebywaffle.crisp;
 
 import java.io.File;
 import java.io.IOException;

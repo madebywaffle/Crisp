@@ -1,4 +1,4 @@
-package me.dongmyeng.crisp;
+package io.github.madebywaffle.crisp;
 
 import com.destroystokyo.paper.VersionHistoryManager;
 import com.destroystokyo.paper.util.VersionFetcher;
