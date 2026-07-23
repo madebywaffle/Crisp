@@ -1,0 +1,15 @@
+--- a/net/minecraft/world/entity/ai/behavior/VillagerPanicTrigger.java
++++ b/net/minecraft/world/entity/ai/behavior/VillagerPanicTrigger.java
+@@ -36,7 +_,11 @@
+ 
+     @Override
+     protected void tick(final ServerLevel level, final Villager body, final long timestamp) {
+-        if (timestamp % 100L == 0L) {
++        // Crisp start - DAB
++        if (body.nextGolemPanic < 0) body.nextGolemPanic = timestamp + 100;
++        if (--body.nextGolemPanic < timestamp) {
++            body.nextGolemPanic = -1;
++            // Crisp end - DAB
+             body.spawnGolemIfNeeded(level, timestamp, 3);
+         }
+     }

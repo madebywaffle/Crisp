@@ -1,0 +1,36 @@
+--- a/net/minecraft/world/entity/Mob.java
++++ b/net/minecraft/world/entity/Mob.java
+@@ -220,10 +_,10 @@
+     public void inactiveTick() {
+         super.inactiveTick();
+         if (!this.aware) return; // Paper - Do not tick AI for inactive unaware mobs
+-        if (this.goalSelector.inactiveTick()) {
++        if (this.goalSelector.inactiveTick(this.activatedPriority, true)) { // Crisp - DAB
+             this.goalSelector.tick();
+         }
+-        if (this.targetSelector.inactiveTick()) {
++        if (this.targetSelector.inactiveTick(this.activatedPriority, true)) { // Crisp - DAB
+             this.targetSelector.tick();
+         }
+     }
+@@ -825,16 +_,20 @@
+         int idBasedTickCount = this.tickCount + this.getId();
+         if (idBasedTickCount % 2 != 0 && this.tickCount > 1) {
+             profiler.push("targetSelector");
++            if (this.targetSelector.inactiveTick(this.activatedPriority, false)) // Crisp - DAB: use this to alternate ticking
+             this.targetSelector.tickRunningGoals(false);
+             profiler.pop();
+             profiler.push("goalSelector");
++            if (this.goalSelector.inactiveTick(this.activatedPriority, false)) // Crisp - DAB: use this to alternate ticking
+             this.goalSelector.tickRunningGoals(false);
+             profiler.pop();
+         } else {
+             profiler.push("targetSelector");
++            if (this.targetSelector.inactiveTick(this.activatedPriority, false)) // Crisp - DAB: use this to alternate ticking
+             this.targetSelector.tick();
+             profiler.pop();
+             profiler.push("goalSelector");
++            if (this.goalSelector.inactiveTick(this.activatedPriority, false)) // Crisp - DAB: use this to alternate ticking
+             this.goalSelector.tick();
+             profiler.pop();
+         }

@@ -1,0 +1,10 @@
+--- a/net/minecraft/world/entity/EntityType.java
++++ b/net/minecraft/world/entity/EntityType.java
+@@ -67,6 +_,7 @@
+     private final int clientTrackingRange;
+     private final int updateInterval;
+     private final String descriptionId;
++    public boolean dabEnabled = false; // Crisp - DAB
+     private @Nullable Component description;
+     private final Optional<ResourceKey<LootTable>> lootTable;
+     private final EntityDimensions dimensions;

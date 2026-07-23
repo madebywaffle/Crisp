@@ -1,0 +1,27 @@
+--- a/io/papermc/paper/entity/activation/ActivationRange.java
++++ b/io/papermc/paper/entity/activation/ActivationRange.java
+@@ -166,6 +_,24 @@
+                 }
+ 
+                 ActivationRange.activateEntity(entity);
++
++                // Crisp start - DAB
++                if (me.dongmyeng.crisp.CrispConfig.dearEnabled && entity.getType().dabEnabled) {
++                    if (!entity.activatedPriorityReset) {
++                        entity.activatedPriorityReset = true;
++                        entity.activatedPriority = me.dongmyeng.crisp.CrispConfig.maximumActivationPrio;
++                    }
++                    net.minecraft.world.phys.Vec3 playerVec = player.position();
++                    net.minecraft.world.phys.Vec3 entityVec = entity.position();
++                    double diffX = playerVec.x - entityVec.x, diffY = playerVec.y - entityVec.y, diffZ = playerVec.z - entityVec.z;
++                    int squaredDistance = (int) (diffX * diffX + diffY * diffY + diffZ * diffZ);
++                    entity.activatedPriority = squaredDistance > me.dongmyeng.crisp.CrispConfig.startDistanceSquared ?
++                            Math.max(1, Math.min(squaredDistance >> me.dongmyeng.crisp.CrispConfig.activationDistanceMod, entity.activatedPriority)) :
++                            1;
++                } else {
++                    entity.activatedPriority = 1;
++                }
++                // Crisp end - DAB
+             }
+         }
+     }
